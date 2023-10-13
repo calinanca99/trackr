@@ -4,5 +4,5 @@ create table users (
     username varchar(255) not null unique,
     password_hash text not null,
     inserted_at timestamptz default now() not null,
-    updated_at timestamptz
+    updated_at timestamptz default now() not null
 );

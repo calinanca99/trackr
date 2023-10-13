@@ -5,6 +5,6 @@ create table links (
     link text not null,
     link_name text,
     inserted_at timestamptz default now() not null,
-    updated_at timestamptz,
+    updated_at timestamptz default now() not null,
     unique(user_id, link)
 )

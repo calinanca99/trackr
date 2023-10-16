@@ -3,7 +3,7 @@ use axum::{
     Router,
 };
 use sqlx::postgres::PgPoolOptions;
-use trackr::routes::{create_user, health_check};
+use trackr::routes::*;
 
 #[tokio::main]
 async fn main() {
@@ -16,6 +16,7 @@ async fn main() {
     let app = Router::new()
         .route("/health_check", get(health_check))
         .route("/api/v1/create_user", post(create_user))
+        .route("/api/v1/login", post(login))
         .with_state(db);
 
     axum::Server::bind(&"0.0.0.0:8000".parse().unwrap())

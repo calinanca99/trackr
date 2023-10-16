@@ -20,10 +20,13 @@ pub struct CreateAccount {
     pub password: String,
 }
 
-pub async fn create_user(State(db): State<PgPool>, Json(data): Json<CreateAccount>) -> Response {
+pub async fn create_user(
+    State(db): State<PgPool>,
+    Json(create_account): Json<CreateAccount>,
+) -> Response {
     match (
-        Username::try_from(data.username),
-        Password::try_from(data.password),
+        Username::try_from(create_account.username),
+        Password::try_from(create_account.password),
     ) {
         (Ok(username), Ok(password)) => {
             let user_id = Uuid::new_v4();
@@ -60,12 +63,13 @@ async fn insert_user(
         let password_salt = SaltString::generate(&mut OsRng);
         let password_hash = argon2
             .hash_password(password.as_bytes(), &password_salt)
-            .unwrap()
-            .to_string();
+            // TODO: Replace with `expect` or use `anyhow`
+            .unwrap();
 
-        (password_hash, password_salt.to_string())
+        (password_hash.to_string(), password_salt.to_string())
     })
     .await
+    // TODO: Replace with `expect` or use `anyhow`
     .unwrap();
 
     sqlx::query!(
@@ -74,7 +78,7 @@ async fn insert_user(
                 "#,
                     user_id,
                     username,
-                    hash_task.0.to_string(),
+                    hash_task.0,
                     hash_task.1,
                 )
                 .execute(db)

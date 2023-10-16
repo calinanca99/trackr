@@ -71,16 +71,15 @@ async fn insert_user(
     .expect("cannot spawn tokio task");
 
     sqlx::query!(
-                    r#"
-                insert into users (id, username, password_hash, password_salt) values ($1, $2, $3, $4)
+        r#"
+                insert into users (id, username, password_hash) values ($1, $2, $3)
                 "#,
-                    user_id,
-                    username,
-                    hash_task.0,
-                    hash_task.1,
-                )
-                .execute(db)
-                .await?;
+        user_id,
+        username,
+        hash_task.0,
+    )
+    .execute(db)
+    .await?;
 
     Ok(())
 }

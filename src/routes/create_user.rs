@@ -63,14 +63,12 @@ async fn insert_user(
         let password_salt = SaltString::generate(&mut OsRng);
         let password_hash = argon2
             .hash_password(password.as_bytes(), &password_salt)
-            // TODO: Replace with `expect` or use `anyhow`
-            .unwrap();
+            .expect("cannot generate password hash");
 
         (password_hash.to_string(), password_salt.to_string())
     })
     .await
-    // TODO: Replace with `expect` or use `anyhow`
-    .unwrap();
+    .expect("cannot spawn tokio task");
 
     sqlx::query!(
                     r#"

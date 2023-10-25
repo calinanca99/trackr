@@ -12,7 +12,10 @@ use serde::Deserialize;
 use sqlx::PgPool;
 use uuid::Uuid;
 
-use crate::domain::{Account, Password, Username};
+use crate::{
+    db::DBResult,
+    domain::{Account, Password, Username},
+};
 
 #[derive(Deserialize)]
 pub struct CreateAccount {
@@ -56,7 +59,7 @@ async fn insert_user(
     username: String,
     password: String,
     db: &PgPool,
-) -> Result<(), sqlx::Error> {
+) -> DBResult<()> {
     let hash_task = tokio::task::spawn_blocking(move || {
         let argon2 = Argon2::default();
 

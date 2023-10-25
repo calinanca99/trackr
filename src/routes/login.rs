@@ -10,6 +10,8 @@ use serde::Deserialize;
 use sqlx::PgPool;
 use uuid::Uuid;
 
+use crate::db::DBResult;
+
 #[derive(Deserialize)]
 pub struct Login {
     username: String,
@@ -51,7 +53,7 @@ pub async fn login(State(db): State<PgPool>, Json(login): Json<Login>) -> Respon
     (StatusCode::OK, token).into_response()
 }
 
-async fn get_user(username: &str, db: &PgPool) -> Result<User, sqlx::Error> {
+async fn get_user(username: &str, db: &PgPool) -> DBResult<User> {
     let user = sqlx::query!(
         r#"
         select id, password_hash from users u
@@ -68,12 +70,7 @@ async fn get_user(username: &str, db: &PgPool) -> Result<User, sqlx::Error> {
     })
 }
 
-async fn insert_session(
-    session_id: Uuid,
-    user_id: Uuid,
-    token: &str,
-    db: &PgPool,
-) -> Result<(), sqlx::Error> {
+async fn insert_session(session_id: Uuid, user_id: Uuid, token: &str, db: &PgPool) -> DBResult<()> {
     let expires_at = Utc::now()
         .checked_add_days(Days::new(90))
         .expect("cannot compute expiring date for the token");

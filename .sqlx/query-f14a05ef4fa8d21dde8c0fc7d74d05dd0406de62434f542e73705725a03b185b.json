@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select us.user_id from user_sessions us\n        where us.token = $1 and us.expires_at > $2\n        \n    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "f14a05ef4fa8d21dde8c0fc7d74d05dd0406de62434f542e73705725a03b185b"
+}

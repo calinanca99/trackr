@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        insert into link_labels (link_label, link_id) values ($1, $2)\n    ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2bebbdb7e1c87c9c63269cd0c12ed2eea1a813dd13a2c2936f79ef4498d6df63"
+}
